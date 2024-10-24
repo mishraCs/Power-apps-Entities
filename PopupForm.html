@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Popup Form</title>
+    <style>
+       body {
+        font-family: sans-serif;
+        background-color: #f0f8ff; 
+        margin: 0;
+        padding: 0;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .form-container {
+        background-color: white; 
+        border: 1px solid #000;
+        border-radius: 0.008rem; 
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+        width: 300px; 
+    }
+
+    h2 {
+        color: blue; 
+        text-align: center;
+    }
+
+    label {
+        color: red; 
+        display: block; 
+        margin-top: 10px; 
+    }
+
+    input {
+        width: 100%; 
+        padding: 8px; 
+        margin-top: 5px; 
+        border-radius: 0.008rem; 
+        border: 1px solid #ccc;
+    }
+
+    button {
+        background-color: black; 
+        color: white; 
+        border: none; 
+        padding: 10px;
+        margin-top: 15px; 
+        cursor: pointer; 
+        width: 100%;
+        border-radius: 0.008rem; 
+    }
+
+    button:hover {
+        background-color: #444; 
+    }
+
+    </style>
+</head>
+<body>
+    <div class="form-container"></div>
+        <h2>Enter Details</h2><br>
+        <div>
+            <label for="nameInput">Name:</label>
+            <input type="text" id="nameInput" required>   
+        </div><br> 
+        <div>
+            <label for="class">Class</label>
+            <input type="text" id="classStud" required>  
+        </div><br>  
+        <div>
+            <label for="technology">Technology</label>
+            <input type="text" id="technology" required>  
+        </div><br>  
+        <div>
+            <label for="organization">Organization</label>
+            <input type="text" id="organization" required>  
+        </div><br>  
+        <button id="submitBtn">Submit</button>
+    </div>
+</body>
+<script>
+    class FormData {
+        constructor(name, classStud, technology, organization) {
+            this.name = name;
+            this.classStud = classStud;
+            this.technology = technology;
+            this.organization = organization;
+        }
+        populateFormContext(formContext) {
+            formContext.getAttribute("gst_name").setValue(this.name);
+            formContext.getAttribute("gst_studentclass").setValue(this.classStud);
+            formContext.getAttribute("gst_technology").setValue(this.technology);
+            formContext.getAttribute("gst_organization").setValue(this.organization);
+        }
+    }
+
+    class FormHandler {
+        constructor(formContext) {
+            this.formContext = formContext;
+        }
+
+        submit(formData) {
+            formData.populateFormContext(this.formContext);
+            this.formContext.data.entity.save();
+            console.log("Form values submitted: ", formData);
+            Xrm.Navigation.close();
+        }
+    }
+
+    let formContext;
+
+    function initialize() {
+        formContext = window.top.formContext;
+        console.log(formContext);
+    }
+
+    document.getElementById("submitBtn").addEventListener("click", function () {
+        initialize();
+        
+        const name = document.getElementById("nameInput").value;
+        const classStud = document.getElementById("classStud").value;
+        const technology = document.getElementById("technology").value;
+        const organization = document.getElementById("organization").value;
+
+        const formData = new FormData(name, classStud, technology, organization);
+        const formHandler = new FormHandler(formContext);
+        formHandler.submit(formData);
+    });
+</script>
+</html>
